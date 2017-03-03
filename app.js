@@ -5,10 +5,12 @@ $(document).ready(function(){
 	var answers2 = [5,6,7];
 	var answers3 = [4,3,2,];
 	var answers4 = [6,7,2];
-	var secondsValue = 20;
+	var secondsValue = 15;
 	var i = 0;
 	var newDialog = $("<dialog>");	
 	var userAnswer = "";	
+	var correctAnswersCount = 0;
+	var wrongAnswersCount = 0;
 	
 	questionAnswers();
 	var myInterval = setInterval(function(){
@@ -49,6 +51,7 @@ $(document).ready(function(){
 				//console.log(userAnswer);
 				//console.log(correctAnswers[i]);
 					if(userAnswer == correctAnswers[i]){
+						correctAnswersCount++;
 						stopInterval();
 						//console.log("correct");
 						newDialog.html("Correct!");
@@ -60,6 +63,7 @@ $(document).ready(function(){
 						}, 2000);
 					}
 					else{
+						wrongAnswersCount++;
 						stopInterval();
 						//console.log("wrong");
 						newDialog.html("Wrong!");
@@ -76,8 +80,8 @@ $(document).ready(function(){
 	}
 	
 	function restartGame(){
+		i++;
 		if(i < questions.length){
-			i++;
 			secondsValue=15
 			//console.log(secondsValue);	
 			questionAnswers();
@@ -86,7 +90,21 @@ $(document).ready(function(){
 	,1000);
 		}
 		else{
-			console.log("Game Over");
+			stopInterval();
+			$("#timeremaining").hide();
+			$("#question").hide();
+			$(".answers").hide();
+			newDialog.html("Game Over<br>You answered " + correctAnswersCount + " question(s) correctly<br>You answered " + wrongAnswersCount + " question(s) incorrectly<br>Press any key to restart");
+			$("#result-box").prepend(newDialog);
+			newDialog.show();
+			$(document).keypress(function(){
+				newDialog.remove();
+				$("#timeremaining").show();
+				$("#question").show();
+				$(".answers").show();
+				i = -1;
+				restartGame();
+			});
 		}
 	}
 });
