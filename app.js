@@ -5,9 +5,10 @@ $(document).ready(function(){
 	var answers2 = [5,6,7];
 	var answers3 = [4,3,2,];
 	var answers4 = [6,7,2];
-	var secondsValue = 5;
+	var secondsValue = 20;
 	var i = 0;
-	var newDialog = $("<dialog>");		
+	var newDialog = $("<dialog>");	
+	var userAnswer = "";	
 	
 	questionAnswers();
 	var myInterval = setInterval(function(){
@@ -33,7 +34,6 @@ $(document).ready(function(){
 	function triviaGame(){
 			secondsValue = secondsValue - 1;
 			$("#timeremaining").html("Time Remaining: " + secondsValue + " seconds");
-			console.log(secondsValue);
 			if(secondsValue === 0){
 				stopInterval();
 				newDialog.html("Time's Up");
@@ -43,29 +43,34 @@ $(document).ready(function(){
 					newDialog.remove();}, 2000);
 				restartGame();
 			};
-			$(".answers").click(function(event){
-				var userAnswer = event.target.innerHTML;
-				console.log(userAnswer);
-				console.log(correctAnswers[i]);
+			$(".answers").unbind('click').bind('click', function(event){
+				console.log(event);
+				userAnswer = event.target.innerHTML;
+				//console.log(userAnswer);
+				//console.log(correctAnswers[i]);
 					if(userAnswer == correctAnswers[i]){
 						stopInterval();
-						console.log("correct");
+						//console.log("correct");
 						newDialog.html("Correct!");
 						$("#result-box").prepend(newDialog);
 						newDialog.show();
 						setTimeout(function(){
-						newDialog.remove();}, 2000);
+							newDialog.remove();
+							restartGame();
+						}, 2000);
 					}
 					else{
 						stopInterval();
-						console.log("wrong");
+						//console.log("wrong");
 						newDialog.html("Wrong!");
 						$("#result-box").prepend(newDialog);
 						newDialog.show();
 						setTimeout(function(){
-						newDialog.remove();}, 2000);
-					}
-					restartGame();	
+							newDialog.remove();
+							restartGame();
+						}, 2000);
+					}	
+					
 			});
 			
 	}
@@ -74,7 +79,7 @@ $(document).ready(function(){
 		if(i < questions.length){
 			i++;
 			secondsValue=15
-			console.log(secondsValue);	
+			//console.log(secondsValue);	
 			questionAnswers();
 			myInterval = setInterval(function(){
 			triviaGame();}
