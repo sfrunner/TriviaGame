@@ -6,6 +6,7 @@ $(document).ready(function(){
 	var answers3 = [4,3,2,];
 	var answers4 = [6,7,2];
 	var secondsValue = 15;
+	var originalSecondsValueHTML = "Time Remaining: " + 15 + " seconds"
 	var i = 0;
 	var newDialog = $("<dialog>");	
 	var userAnswer = "";	
@@ -38,12 +39,14 @@ $(document).ready(function(){
 			$("#timeremaining").html("Time Remaining: " + secondsValue + " seconds");
 			if(secondsValue === 0){
 				stopInterval();
-				newDialog.html("Time's Up");
+				wrongAnswersCount++;
+				newDialog.html("Time's Up<br>Correct Answer is " + correctAnswers[i]);
 				$("#result-box").prepend(newDialog);
 				newDialog.show();
 				setTimeout(function(){
-					newDialog.remove();}, 2000);
-				restartGame();
+					newDialog.remove();
+					restartGame();	
+				}, 2000);
 			};
 			$(".answers").unbind('click').bind('click', function(event){
 				console.log(event);
@@ -66,7 +69,7 @@ $(document).ready(function(){
 						wrongAnswersCount++;
 						stopInterval();
 						//console.log("wrong");
-						newDialog.html("Wrong!");
+						newDialog.html("Incorrect!<br>Correct Answer is " + correctAnswers[i]);
 						$("#result-box").prepend(newDialog);
 						newDialog.show();
 						setTimeout(function(){
@@ -83,6 +86,7 @@ $(document).ready(function(){
 		i++;
 		if(i < questions.length){
 			secondsValue=15
+			$("#timeremaining").html(originalSecondsValueHTML);
 			//console.log(secondsValue);	
 			questionAnswers();
 			myInterval = setInterval(function(){
@@ -91,20 +95,24 @@ $(document).ready(function(){
 		}
 		else{
 			stopInterval();
-			$("#timeremaining").hide();
-			$("#question").hide();
-			$(".answers").hide();
-			newDialog.html("Game Over<br>You answered " + correctAnswersCount + " question(s) correctly<br>You answered " + wrongAnswersCount + " question(s) incorrectly<br>Press any key to restart");
-			$("#result-box").prepend(newDialog);
-			newDialog.show();
-			$(document).keypress(function(){
-				newDialog.remove();
-				$("#timeremaining").show();
-				$("#question").show();
-				$(".answers").show();
-				i = -1;
-				restartGame();
-			});
+			setTimeout(function(){
+				$("#timeremaining").hide();
+				$("#question").hide();
+				$(".answers").hide();
+				newDialog.html("Game Over<br>You answered " + correctAnswersCount + " question(s) correctly<br>You answered " + wrongAnswersCount + " question(s) incorrectly<br>Press any key to restart");
+				$("#result-box").prepend(newDialog);
+				newDialog.show();
+				$(document).keypress(function(){
+					newDialog.remove();
+					$("#timeremaining").show();
+					$("#question").show();
+					$(".answers").show();
+					i = -1;
+					correctAnswersCount = 0;
+					wrongAnswersCount = 0;
+					restartGame();
+				});
+			},2000);
 		}
 	}
 });
