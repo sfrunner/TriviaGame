@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	
+	//Global Variables
 	var questions = ["What is Javascript?","What symbol is used to enable jQuery?", "Where should you link your external CSS file in your HTML?", "What measure of time is used for the Javascript function setInterval & setTimeout?", "What does API stand for?", "Which one of the options below is a benefit of Twitter Bootstrap?", "Which statement below is the best explanation for understanding the scope of functions in Javascript?", "What does the $.ajax jQuery function do?" ];
 	var correctAnswers = ["a dynamic computer programming language","$","in the head tag", "milliseconds", "Application Programming Interface", "makes web development faster and easier", "a function can only access globally defined variables created outside of its body", "perform an asynchronous HTTP request" ];
 	var answers1 = ["a type of coffee","$", "in the style tag","seconds", "Additional Programming Information", "makes web development faster and easier","a function can access all variables defined in the script no matter where they are created", "finish your computer bootcamp homework"];
@@ -13,6 +15,7 @@ $(document).ready(function(){
 	var correctAnswersCount = 0;
 	var wrongAnswersCount = 0;
 	
+	//Full Program
 	questionAnswers();
 	var myInterval = setInterval(function(){
 			triviaGame();}
@@ -20,72 +23,42 @@ $(document).ready(function(){
 	
 	
 
-		
+	//Function to stop myInterval
 	function stopInterval(){
 		clearInterval(myInterval);
 	}
 	
+	//Function for printing question and answers
 	function questionAnswers(){
-			$("#question").html(questions[i]);
-			$("#answer1").html(answers1[i]);
-			$("#answer2").html(answers2[i]);
-			$("#answer3").html(answers3[i]);
-			$("#answer4").html(answers4[i]);
+		$("#question").html(questions[i]);
+		$("#answer1").html(answers1[i]);
+		$("#answer2").html(answers2[i]);
+		$("#answer3").html(answers3[i]);
+		$("#answer4").html(answers4[i]);
 	}
 	
-	
+	//Function for actual game itself
 	function triviaGame(){
 			secondsValue = secondsValue - 1;
 			$("#timeremaining").html("Time Remaining: " + secondsValue + " seconds");
 			if(secondsValue === 0){
-				stopInterval();
-				wrongAnswersCount++;
-				newDialog.html("Time's Up<br>Correct answer is " + correctAnswers[i]);
-				$("#result-box").prepend(newDialog);
-				newDialog.show();
-				setTimeout(function(){
-					newDialog.remove();
-					restartGame();	
-				}, 2000);
+				ifElseAction("Time's Up<br>Correct answer is " + correctAnswers[i],wrongAnswersCount++);
 			};
 			$(".answers").unbind('click').bind('click', function(event){
-				console.log(event);
 				userAnswer = event.target.innerHTML;
-				//console.log(userAnswer);
-				//console.log(correctAnswers[i]);
-					if(userAnswer == correctAnswers[i]){
-						correctAnswersCount++;
-						stopInterval();
-						//console.log("correct");
-						newDialog.html("Correct!");
-						$("#result-box").prepend(newDialog);
-						newDialog.show();
-						setTimeout(function(){
-							newDialog.remove();
-							restartGame();
-						}, 2000);
-					}
-					else{
-						wrongAnswersCount++;
-						stopInterval();
-						//console.log("wrong");
-						newDialog.html("Incorrect!<br>Correct answer is " + correctAnswers[i]);
-						$("#result-box").prepend(newDialog);
-						newDialog.show();
-						setTimeout(function(){
-							newDialog.remove();
-							restartGame();
-						}, 2000);
-					}	
-					
-			});
-			
+				if(userAnswer == correctAnswers[i]){
+					ifElseAction("Correct!",correctAnswersCount++);
+				}
+				else{
+					ifElseAction("Incorrect!<br>Correct answer is " + correctAnswers[i],wrongAnswersCount++);
+				}		
+			});	
 	}
 	
-	function ifElseAction(dialogString,score){
-		score++;
+	//Function for universal actions when certain criteria is met
+	function ifElseAction(dialogString,scoreAddition){
+		scoreAddition;
 		stopInterval();
-		
 		newDialog.html(dialogString);
 		$("#result-box").prepend(newDialog);
 		newDialog.show();
@@ -94,34 +67,28 @@ $(document).ready(function(){
 			restartGame();
 		}, 2000);
 	}
-
+	
+	//Critera and Actions to Restart/Reset Game
 	function restartGame(){
 		i++;
 		if(i < questions.length){
 			secondsValue=20
-			$("#timeremaining").html(originalSecondsValueHTML);
-			//console.log(secondsValue);	
+			$("#timeremaining").html(originalSecondsValueHTML);	
 			questionAnswers();
 			myInterval = setInterval(function(){
-			triviaGame();}
-	,1000);
+				triviaGame();}
+			,1000);
 		}
 		else{
 			stopInterval();
 			setTimeout(function(){
-				$("#timeremaining").hide();
-				$("#question").hide();
-				$(".answers").hide();
-				$("ol").hide();
+				$("#timeremaining, #question, .answers, ol").hide();
 				newDialog.html("Game Over<br>You answered " + correctAnswersCount + " question(s) correctly<br>You answered " + wrongAnswersCount + " question(s) incorrectly<br>Press any key to restart");
 				$("#result-box").prepend(newDialog);
 				newDialog.show();
 				$(document).one("keypress", function(){
 					newDialog.remove();
-					$("#timeremaining").show();
-					$("#question").show();
-					$(".answers").show();
-					$("ol").show();
+					$("#timeremaining, #question, .answers, ol").show();					
 					i = -1;
 					correctAnswersCount = 0;
 					wrongAnswersCount = 0;
