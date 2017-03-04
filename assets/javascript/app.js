@@ -11,16 +11,21 @@ $(document).ready(function(){
 	var originalSecondsValueHTML = "Time Remaining: " + 20 + " seconds"
 	var i = 0;
 	var newDialog = $("<dialog>");	
-	var userAnswer = "";	
+	var userAnswer;
+	var myInterval;
 	var correctAnswersCount = 0;
 	var wrongAnswersCount = 0;
 	
 	//Full Program
-	questionAnswers();
-	var myInterval = setInterval(function(){
-			triviaGame();}
-	,1000);
-	
+	$("ol").hide();
+	$(document).keypress(function(){
+		$("#timeremaining").html("Time Remaining: " + secondsValue + " seconds");
+		$("ol").show();
+		questionAnswers();
+		myInterval = setInterval(function(){
+				triviaGame();}
+		,1000);
+	});	
 	
 
 	//Function to stop myInterval
